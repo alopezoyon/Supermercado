@@ -37,8 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
                 if (databaseHelper.isValidCredentials(username, password)) {
                     Toast.makeText(MainActivity.this, "Inicio de sesión exitoso", Toast.LENGTH_SHORT).show();
-                    // Iniciar la actividad después de un inicio de sesión exitoso
+
                     Intent intent = new Intent(MainActivity.this, MenuPrincipal.class);
+                    intent.putExtra("USERNAME_EXTRA", username);
                     startActivity(intent);
                 } else {
                     loginAttempts--;
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+
         });
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
