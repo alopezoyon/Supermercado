@@ -1,6 +1,7 @@
 package com.example.supermercado;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MenuPrincipal extends AppCompatActivity implements DialogAgregarProducto.OnProductoAddedListener {
-
-    private List<Producto> listaProductos;
     private ProductosAdapter productosAdapter;
+    private DatabaseHelper databaseHelper;
+    private List<Producto> listaProductos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +28,10 @@ public class MenuPrincipal extends AppCompatActivity implements DialogAgregarPro
         TextView txtWelcome = findViewById(R.id.txtWelcome);
         txtWelcome.setText("¡Bienvenido, " + username + "!");
 
+        databaseHelper = new DatabaseHelper(this);
         listaProductos = new ArrayList<>();
 
-        listaProductos.add(new Producto("Producto 1", 10.99));
-        listaProductos.add(new Producto("Producto 2", 20.49));
-        listaProductos.add(new Producto("Producto 3", 15.75));
+        cargarProductosDesdeDB();
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewProductos);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -48,12 +48,22 @@ public class MenuPrincipal extends AppCompatActivity implements DialogAgregarPro
         });
     }
 
+    private void cargarProductosDesdeDB() {
+        Log.d("CargarProductos", "Iniciando carga de productos desde la base de datos");
+
+        listaProductos.clear();
+        listaProductos.addAll(databaseHelper.getProductos());
+
+        Log.d("CargarProductos", "Productos cargados desde la base de datos: " + listaProductos.size());
+    }
+
+
     @Override
     public void onProductoAdded(String nombre, double precio) {
-        Producto nuevoProducto = new Producto(nombre, precio);
-        listaProductos.add(nuevoProducto);
+        databaseHelper.addProducto(nombre, precio);
+
+        cargarProductosDesdeDB();
 
         productosAdapter.notifyDataSetChanged();
     }
 }
-
