@@ -11,7 +11,7 @@ public class DialogAgregarProducto extends Dialog {
 
     private OnProductoAddedListener listener;
 
-    public DialogAgregarProducto(Context context, MenuPrincipal listener) {
+    public DialogAgregarProducto(Context context, ProductosSupermercadoActivity listener) {
         super(context);
         this.listener = listener;
     }
