@@ -23,13 +23,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductosSupermercadoActivity extends AppCompatActivity implements DialogAgregarProducto.OnProductoAddedListener, LocationListener {
+public class ProductosSupermercadoActivity extends AppCompatActivity implements DialogAgregarProducto.OnProductoAddedListener {
     private ProductosAdapter productosAdapter;
     private DatabaseHelper databaseHelper;
     private List<Producto> listaProductos;
     private String nombreSupermercado;
-    private LocationManager locationManager;
-    private String localizacionSupermercado;
 
 
     @Override
@@ -37,10 +35,8 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_productos_supermercado);
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
         nombreSupermercado = getIntent().getStringExtra("NOMBRE_SUPERMERCADO");
-        localizacionSupermercado = getIntent().getStringExtra("LOCALIZACION_SUPERMERCADO");
+        String localizacionSupermercado = getIntent().getStringExtra("LOCALIZACION_SUPERMERCADO");
 
         TextView txtSupermercado = findViewById(R.id.txtSupermercado);
         txtSupermercado.setText("Productos de " + nombreSupermercado);
@@ -48,7 +44,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         databaseHelper = new DatabaseHelper(this);
         listaProductos = new ArrayList<>();
 
-        cargarProductosDesdeDB();
+        cargarProductosDesdeDB(nombreSupermercado);
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewProductosSupermercado);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -67,45 +63,26 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         btnIr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (isLocationEnabled()) {
-                    requestSingleLocationUpdate();
-                } else {
-                    Toast.makeText(ProductosSupermercadoActivity.this, "Please enable location services", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-                }
+                openGoogleMapsForSupermarket(localizacionSupermercado);
             }
         });
     }
 
-    private boolean isLocationEnabled() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-    }
+    private void openGoogleMapsForSupermarket(String localizacionSupermercado) {
+        String supermercadoUri = Uri.encode(localizacionSupermercado);
+        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + supermercadoUri);
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
 
-    private void requestSingleLocationUpdate() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1);
-                return;
-            }
-        }
-
-        try {
-            locationManager.requestSingleUpdate(LocationManager.GPS_PROVIDER, this, null);
-        } catch (SecurityException e) {
-            e.printStackTrace();
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        } else {
+            Toast.makeText(ProductosSupermercadoActivity.this, "Google Maps no está instalado en tu dispositivo", Toast.LENGTH_SHORT).show();
         }
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-    }
 
-
-
-    private void cargarProductosDesdeDB() {
+    private void cargarProductosDesdeDB(String nombreSupermercado) {
         listaProductos.clear();
         listaProductos.addAll(databaseHelper.getProductosPorSupermercado(nombreSupermercado));
     }
@@ -118,8 +95,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
     @Override
     public void onProductoAdded(String nombre, double precio) {
         databaseHelper.addProductoASupermercado(nombreSupermercado, nombre);
-        cargarProductosDesdeDB();
+        cargarProductosDesdeDB(nombreSupermercado);
         productosAdapter.notifyDataSetChanged();
     }
 }
-

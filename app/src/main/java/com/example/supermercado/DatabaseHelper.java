@@ -93,7 +93,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void addUser(String username, String password) {
         SQLiteDatabase db = this.getWritableDatabase();
-        // Asegúrate de manejar las contraseñas de manera segura (hashing, etc.) en una aplicación real
         ContentValues values = new ContentValues();
         values.put(COLUMN_USERNAME, username);
         values.put(COLUMN_PASSWORD, password);
