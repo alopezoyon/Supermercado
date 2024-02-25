@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuPrincipal extends AppCompatActivity implements DialogAgregarSupermercado.OnSupermercadoAddedListener, DialogAgregarProducto.OnProductoAddedListener, SupermercadosAdapter.OnSupermercadoClickListener {
+public class MenuPrincipal extends AppCompatActivity implements DialogAgregarSupermercado.OnSupermercadoAddedListener, SupermercadosAdapter.OnSupermercadoClickListener {
     private SupermercadosAdapter supermercadosAdapter;
     private DatabaseHelper databaseHelper;
     private List<Supermercado> listaSupermercados;
@@ -67,10 +67,6 @@ public class MenuPrincipal extends AppCompatActivity implements DialogAgregarSup
         supermercadosAdapter.notifyDataSetChanged();
     }
 
-    @Override
-    public void onProductoAdded(String nombre, double precio) {
-        // Puedes implementar la lógica para agregar productos a un supermercado aquí si es necesario.
-    }
 
     @Override
     public void onSupermercadoClick(int position) {

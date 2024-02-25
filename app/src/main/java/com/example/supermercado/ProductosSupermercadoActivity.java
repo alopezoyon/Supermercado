@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -55,7 +56,8 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         btnAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openAddProductDialog();
+                DialogAgregarProducto dialog = new DialogAgregarProducto(ProductosSupermercadoActivity.this, ProductosSupermercadoActivity.this);
+                dialog.show();
             }
         });
 
@@ -83,18 +85,17 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
 
 
     private void cargarProductosDesdeDB(String nombreSupermercado) {
+        Log.d("CargarProductos", "Iniciando carga de productos desde la base de datos");
+
         listaProductos.clear();
         listaProductos.addAll(databaseHelper.getProductosPorSupermercado(nombreSupermercado));
-    }
 
-    private void openAddProductDialog() {
-        DialogAgregarProducto dialog = new DialogAgregarProducto(this, this);
-        dialog.show();
+        Log.d("CargarProductos", "Productos cargados desde la base de datos: " + listaProductos.size());
     }
 
     @Override
     public void onProductoAdded(String nombre, double precio) {
-        databaseHelper.addProductoASupermercado(nombreSupermercado, nombre);
+        databaseHelper.addProductoASupermercado(nombreSupermercado, nombre, precio);
         cargarProductosDesdeDB(nombreSupermercado);
         productosAdapter.notifyDataSetChanged();
     }

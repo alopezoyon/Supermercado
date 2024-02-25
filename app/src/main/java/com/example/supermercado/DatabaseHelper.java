@@ -13,18 +13,17 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supermercado_database";
-    private static final int DATABASE_VERSION = 11;
+    private static final int DATABASE_VERSION = 17;
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
     private static final String TABLE_SUPERMERCADOS = "supermercados";
     private static final String COLUMN_SUPERMERCADO_NOMBRE = "nombre_super";
     private static final String COLUMN_SUPERMERCADO_LOCALIZACION = "localizacion";
-    private static final String TABLE_PRODUCTOS = "productos";
     private static final String COLUMN_PRODUCTO_NOMBRE = "nombre_prod";
     private static final String COLUMN_PRODUCTO_PRECIO = "precio";
     private static final String TABLE_PRODUCTOS_SUPERMERCADO = "productos_supermercado";
-    private static final String COLUMN_RELACION_ID = "relacion_id";
+
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -42,18 +41,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_SUPERMERCADO_LOCALIZACION + " TEXT)";
         db.execSQL(createSupermercadosTableQuery);
 
-        String createProductosTableQuery = "CREATE TABLE " + TABLE_PRODUCTOS +
-                " (" + COLUMN_PRODUCTO_NOMBRE + " TEXT PRIMARY KEY, " +
-                COLUMN_PRODUCTO_PRECIO + " REAL)";
-        db.execSQL(createProductosTableQuery);
-
         String createProductosSupermercadoTableQuery = "CREATE TABLE " + TABLE_PRODUCTOS_SUPERMERCADO +
-                " (" + COLUMN_RELACION_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_SUPERMERCADO_NOMBRE + " TEXT, " +
-                COLUMN_PRODUCTO_NOMBRE + " TEXT, " +
-                " FOREIGN KEY(" + COLUMN_SUPERMERCADO_NOMBRE + ") REFERENCES " + TABLE_SUPERMERCADOS + "(" + COLUMN_SUPERMERCADO_NOMBRE + "), " +
-                " FOREIGN KEY(" + COLUMN_PRODUCTO_NOMBRE + ") REFERENCES " + TABLE_PRODUCTOS + "(" + COLUMN_PRODUCTO_NOMBRE + "))";
-        Log.d("Sentencia SQL", createProductosSupermercadoTableQuery);
+                " (" + COLUMN_SUPERMERCADO_NOMBRE + " TEXT, " +
+                COLUMN_PRODUCTO_NOMBRE + " TEXT PRIMARY KEY, " +
+                COLUMN_PRODUCTO_PRECIO + " REAL, " +
+                " FOREIGN KEY(" + COLUMN_SUPERMERCADO_NOMBRE + ") REFERENCES " + TABLE_SUPERMERCADOS + "(" + COLUMN_SUPERMERCADO_NOMBRE + "))";
         db.execSQL(createProductosSupermercadoTableQuery);
     }
 
@@ -63,7 +55,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         /*
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SUPERMERCADOS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTOS);
+        db.execSQL("DROP TABLE IF EXISTS " + "productos");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTOS_SUPERMERCADO);
 
         onCreate(db);
@@ -121,10 +113,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Producto> getProductosPorSupermercado(String nombreSupermercado) {
         List<Producto> listaProductos = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT " + TABLE_PRODUCTOS + "." + COLUMN_PRODUCTO_NOMBRE + ", " + COLUMN_PRODUCTO_PRECIO +
-                " FROM " + TABLE_PRODUCTOS +
-                " INNER JOIN " + TABLE_PRODUCTOS_SUPERMERCADO +
-                " ON " + TABLE_PRODUCTOS + "." + COLUMN_PRODUCTO_NOMBRE + " = " + TABLE_PRODUCTOS_SUPERMERCADO + "." + COLUMN_PRODUCTO_NOMBRE +
+        String query = "SELECT * FROM " + TABLE_PRODUCTOS_SUPERMERCADO +
                 " WHERE " + COLUMN_SUPERMERCADO_NOMBRE + " = ?";
         Cursor cursor = db.rawQuery(query, new String[]{nombreSupermercado});
 
@@ -135,6 +124,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
+        Log.d("GetProductosPorSupermercado", "La lista tiene "+ listaProductos.size() + " elementos");
+
         return listaProductos;
     }
 
@@ -147,12 +138,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addProductoASupermercado(String nombreSupermercado, String nombreProducto) {
+    public void addProductoASupermercado(String nombreSupermercado, String nombreProducto, Double precio) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_SUPERMERCADO_NOMBRE, nombreSupermercado);
         values.put(COLUMN_PRODUCTO_NOMBRE, nombreProducto);
+        values.put(COLUMN_PRODUCTO_PRECIO, precio);
         db.insert(TABLE_PRODUCTOS_SUPERMERCADO, null, values);
         db.close();
     }
+
 }
