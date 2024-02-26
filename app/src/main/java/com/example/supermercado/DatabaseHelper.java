@@ -13,7 +13,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supermercado_database";
-    private static final int DATABASE_VERSION = 17;
+    private static final int DATABASE_VERSION = 18;
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
@@ -35,11 +35,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " (" + COLUMN_USERNAME + " TEXT PRIMARY KEY, " +
                 COLUMN_PASSWORD + " TEXT)";
         db.execSQL(createUserTableQuery);
+        Log.d("DatabaseCreation", "Tabla de usuarios creada");
 
         String createSupermercadosTableQuery = "CREATE TABLE " + TABLE_SUPERMERCADOS +
                 " (" + COLUMN_SUPERMERCADO_NOMBRE + " TEXT PRIMARY KEY, " +
                 COLUMN_SUPERMERCADO_LOCALIZACION + " TEXT)";
         db.execSQL(createSupermercadosTableQuery);
+        Log.d("DatabaseCreation", "Tabla de supermercados creada");
 
         String createProductosSupermercadoTableQuery = "CREATE TABLE " + TABLE_PRODUCTOS_SUPERMERCADO +
                 " (" + COLUMN_SUPERMERCADO_NOMBRE + " TEXT, " +
@@ -47,7 +49,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_PRODUCTO_PRECIO + " REAL, " +
                 " FOREIGN KEY(" + COLUMN_SUPERMERCADO_NOMBRE + ") REFERENCES " + TABLE_SUPERMERCADOS + "(" + COLUMN_SUPERMERCADO_NOMBRE + "))";
         db.execSQL(createProductosSupermercadoTableQuery);
+        Log.d("DatabaseCreation", "Tabla de productos de supermercado creada");
     }
+
 
 
     @Override

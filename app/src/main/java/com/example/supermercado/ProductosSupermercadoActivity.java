@@ -71,26 +71,24 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
     }
 
     private void openGoogleMapsForSupermarket(String localizacionSupermercado) {
-        String supermercadoUri = Uri.encode(localizacionSupermercado);
-        Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + supermercadoUri);
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-
-        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+        try {
+            String supermercadoUri = Uri.encode(localizacionSupermercado);
+            Uri gmmIntentUri = Uri.parse("geo:0,0?q=" + supermercadoUri);
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
             startActivity(mapIntent);
-        } else {
-            Toast.makeText(ProductosSupermercadoActivity.this, "Google Maps no está instalado en tu dispositivo", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(ProductosSupermercadoActivity.this, "Error al abrir Google Maps", Toast.LENGTH_SHORT).show();
         }
     }
 
 
     private void cargarProductosDesdeDB(String nombreSupermercado) {
-        Log.d("CargarProductos", "Iniciando carga de productos desde la base de datos");
 
         listaProductos.clear();
         listaProductos.addAll(databaseHelper.getProductosPorSupermercado(nombreSupermercado));
 
-        Log.d("CargarProductos", "Productos cargados desde la base de datos: " + listaProductos.size());
     }
 
     @Override
