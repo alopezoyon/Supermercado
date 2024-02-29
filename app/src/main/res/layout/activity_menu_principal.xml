@@ -31,7 +31,7 @@
         android:id="@+id/btnAgregarSupermercado"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Agregar Supermercado"
+        android:text="@string/btnAgregarSupermercado"
         app:layout_constraintTop_toBottomOf="@id/recyclerViewSupermercados"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

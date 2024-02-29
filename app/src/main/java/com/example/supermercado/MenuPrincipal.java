@@ -27,7 +27,7 @@ public class MenuPrincipal extends AppCompatActivity implements DialogAgregarSup
         String username = getIntent().getStringExtra("USERNAME_EXTRA");
 
         TextView txtWelcome = findViewById(R.id.txtWelcome);
-        txtWelcome.setText("¡Bienvenido, " + username + "!");
+        txtWelcome.setText(R.string.welcome_message + username + "!");
 
         databaseHelper = new DatabaseHelper(this);
         listaSupermercados = new ArrayList<>();

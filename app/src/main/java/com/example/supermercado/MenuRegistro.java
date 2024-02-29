@@ -39,14 +39,14 @@ public class MenuRegistro extends AppCompatActivity {
 
                 if (!name.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
                     databaseHelper.addUser(username, password);
-                    Toast.makeText(MenuRegistro.this, "Registro exitoso", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuRegistro.this, R.string.registration_success, Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(MenuRegistro.this, MainActivity.class);
                     startActivity(intent);
 
                     finish();
                 } else {
-                    Toast.makeText(MenuRegistro.this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuRegistro.this, R.string.fill_all_fields, Toast.LENGTH_SHORT).show();
                 }
 
             }

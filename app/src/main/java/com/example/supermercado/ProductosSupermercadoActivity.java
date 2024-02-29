@@ -40,7 +40,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         String localizacionSupermercado = getIntent().getStringExtra("LOCALIZACION_SUPERMERCADO");
 
         TextView txtSupermercado = findViewById(R.id.txtSupermercado);
-        txtSupermercado.setText("Productos de " + nombreSupermercado);
+        txtSupermercado.setText(R.string.producto_de + nombreSupermercado);
 
         databaseHelper = new DatabaseHelper(this);
         listaProductos = new ArrayList<>();
@@ -79,7 +79,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
             startActivity(mapIntent);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(ProductosSupermercadoActivity.this, "Error al abrir Google Maps", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProductosSupermercadoActivity.this, R.string.error_maps, Toast.LENGTH_SHORT).show();
         }
     }
 

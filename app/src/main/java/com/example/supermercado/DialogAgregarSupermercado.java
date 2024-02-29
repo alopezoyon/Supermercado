@@ -43,7 +43,7 @@ public class DialogAgregarSupermercado extends Dialog {
 
                     dismiss();
                 } else {
-                    Toast.makeText(getContext(), "Por favor, complete todos los campos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.completar_campos, Toast.LENGTH_SHORT).show();
                 }
             }
         });

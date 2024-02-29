@@ -1,6 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Supermercado</string>
-    <string name="btnLogin">Iniciar Sesión</string>
+    <string name="btnLogin">Iniciar sesión</string>
     <string name="btnRegister">Registrarse</string>
     <string name="login_success">Inicio de sesión exitoso</string>
     <string name="intentos_agotados">Número de intentos agotado</string>
@@ -9,11 +10,11 @@
     <string name="hint_username">Usuario</string>
     <string name="hint_password">Contraseña</string>
     <string name="registration_success">Registro exitoso</string>
-    <string name="fill_all_fields">Completa todos los campos</string>
+    <string name="fill_all_fields">ompleta todos los campos</string>
     <string name="edtName">Nombre</string>
     <string name="edtLastName">Apellido</string>
     <string name="edtEmail">Correo Electrónico</string>
-    <string name="welcome_message">Bienvenido,</string>
+    <string name="welcome_message">"Bienvenido, "</string>
     <string name="btnAgregarSupermercado">Agregar Supermercado</string>
     <string name="edtNombreProducto">Nombre del producto</string>
     <string name="edtPrecioProducto">Precio del producto</string>
@@ -26,9 +27,4 @@
     <string name="error_maps">Error al abrir Google Maps</string>
     <string name="change_language">Cambiar idioma</string>
     <string name="select_language">Elegir idioma</string>
-    <array name="language_options">
-        <item>Castellano</item>
-        <item>English</item>
-        <item>Français</item>
-    </array>
 </resources>

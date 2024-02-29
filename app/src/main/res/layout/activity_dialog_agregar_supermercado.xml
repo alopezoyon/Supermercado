@@ -9,14 +9,14 @@
         android:id="@+id/edtNombreSupermercado"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nombre del supermercado"
+        android:hint="@string/edtNombreSupermercado"
         android:inputType="text" />
 
     <EditText
         android:id="@+id/edtLocalizacionSupermercado"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Localización"
+        android:hint="@string/edtLocalizacionSupermercado"
         android:inputType="text" />
 
     <LinearLayout
@@ -29,14 +29,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Agregar" />
+            android:text="@string/btnAgregar" />
 
         <Button
             android:id="@+id/btnCancelar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Cancelar" />
+            android:text="@string/btnCancelar" />
     </LinearLayout>
 
 </LinearLayout>
