@@ -1,6 +1,7 @@
 package com.example.supermercado;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,21 +9,30 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MenuPrincipal extends AppCompatActivity implements DialogAgregarSupermercado.OnSupermercadoAddedListener, SupermercadosAdapter.OnSupermercadoClickListener {
+public class MenuPrincipal extends AppCompatActivity implements
+        DialogAgregarSupermercado.OnSupermercadoAddedListener,
+        SupermercadosAdapter.OnSupermercadoClickListener,
+        ProductosFragment.listenerDelFragment{
+
     private SupermercadosAdapter supermercadosAdapter;
     private DatabaseHelper databaseHelper;
     private List<Supermercado> listaSupermercados;
+    private boolean esModoHorizontal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_principal);
+
+        esModoHorizontal = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
 
         String username = getIntent().getStringExtra("USERNAME_EXTRA");
 
@@ -50,12 +60,8 @@ public class MenuPrincipal extends AppCompatActivity implements DialogAgregarSup
     }
 
     private void cargarSupermercadosDesdeDB() {
-        Log.d("CargarSupermercados", "Iniciando carga de supermercados desde la base de datos");
-
         listaSupermercados.clear();
         listaSupermercados.addAll(databaseHelper.getSupermercados());
-
-        Log.d("CargarSupermercados", "Supermercados cargados desde la base de datos: " + listaSupermercados.size());
     }
 
     @Override
@@ -67,16 +73,43 @@ public class MenuPrincipal extends AppCompatActivity implements DialogAgregarSup
         supermercadosAdapter.notifyDataSetChanged();
     }
 
-
     @Override
     public void onSupermercadoClick(int position) {
         Supermercado supermercado = listaSupermercados.get(position);
 
-        Intent intent = new Intent(MenuPrincipal.this, ProductosSupermercadoActivity.class);
-        intent.putExtra("NOMBRE_SUPERMERCADO", supermercado.getNombre());
-        intent.putExtra("LOCALIZACION_SUPERMERCADO", supermercado.getLocalizacion());
-        startActivity(intent);
+        if (esModoHorizontal) {
+            cargarProductosFragment(supermercado);
+            Log.d("MenuPrincipal", "Es horizontal");
+        } else {
+            Intent intent = new Intent(MenuPrincipal.this, ProductosSupermercadoActivity.class);
+            intent.putExtra("NOMBRE_SUPERMERCADO", supermercado.getNombre());
+            intent.putExtra("LOCALIZACION_SUPERMERCADO", supermercado.getLocalizacion());
+            startActivity(intent);
+        }
+    }
+
+    private void cargarProductosFragment(Supermercado supermercado) {
+        findViewById(R.id.supermercadoContainer).setVisibility(View.GONE);
+        findViewById(R.id.productoContainer).setVisibility(View.VISIBLE);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        ProductosFragment productosFragment = (ProductosFragment) fragmentManager.findFragmentByTag("ProductosFragment");
+
+        if (productosFragment == null) {
+            productosFragment = new ProductosFragment();
+            fragmentTransaction.replace(R.id.productoContainer, productosFragment, "ProductosFragment");
+        }
+
+        productosFragment.setNombreSupermercado(supermercado.getNombre());
+        Log.d("MenuPrincipal", "Selected Supermarket in Fragment: " + supermercado.getNombre());
+
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+    @Override
+    public void seleccionarElemento(String elemento) {
     }
 }
-
-

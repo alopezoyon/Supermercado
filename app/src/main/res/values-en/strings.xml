@@ -14,7 +14,7 @@
     <string name="edtName">Name</string>
     <string name="edtLastName">Surname</string>
     <string name="edtEmail">Email</string>
-    <string name="welcome_message">"Welcome, "</string>
+    <string name="welcome_message">Welcome,</string>
     <string name="btnAgregarSupermercado">Add supermarket</string>
     <string name="edtNombreProducto">Product name</string>
     <string name="edtPrecioProducto">Product price</string>

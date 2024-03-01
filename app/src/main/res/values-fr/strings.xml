@@ -14,7 +14,7 @@
     <string name="edtName">Prènom</string>
     <string name="edtLastName">Nom</string>
     <string name="edtEmail">Courriel</string>
-    <string name="welcome_message">"Bienvenue, "</string>
+    <string name="welcome_message">Bienvenue,</string>
     <string name="btnAgregarSupermercado">Ajouter un supermarché</string>
     <string name="edtNombreProducto">Nom du produit</string>
     <string name="edtPrecioProducto">Prix du produit</string>

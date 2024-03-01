@@ -29,6 +29,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
     private DatabaseHelper databaseHelper;
     private List<Producto> listaProductos;
     private String nombreSupermercado;
+    private ProductosFragment productosFragment;
 
 
     @Override
