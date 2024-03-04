@@ -41,24 +41,21 @@ public class ProductosFragment extends ListFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        databaseHelper = new DatabaseHelper(requireContext());
-        listaProductos = new ArrayList<>();
+        Bundle args = getArguments();
 
-        if (savedInstanceState != null) {
-            nombreSupermercado = savedInstanceState.getString("nombreSupermercado");
-        }
+        if (args != null) {
+            String nombreSupermercado = args.getString("nombreSupermercado");
+            Log.d("ProductosFragment","Ahora sí tato");
 
-        RecyclerView recyclerView = view.findViewById(R.id.recyclerViewProductos);
-        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        if (nombreSupermercado != null) {
-            cargarProductos(nombreSupermercado);
+            if (nombreSupermercado != null) {
+                cargarProductos(nombreSupermercado);
+            }
         }
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_productos, container, false);
-        return v;
+        View view = inflater.inflate(R.layout.fragment_productos, container, false);
+        return view;
     }
 
     @Override
@@ -78,14 +75,7 @@ public class ProductosFragment extends ListFragment {
         elListener.seleccionarElemento(elemento);
     }
 
-    public void setNombreSupermercado(String nombreSupermercado) {
-        this.nombreSupermercado = nombreSupermercado;
-        if (getView() != null) {
-            cargarProductos(nombreSupermercado);
-        }
-    }
-
-    private void cargarProductos(String nombreSupermercado) {
+    public void cargarProductos(String nombreSupermercado) {
         listaProductos.clear();
         listaProductos.addAll(databaseHelper.getProductosPorSupermercado(nombreSupermercado));
         Log.d("ProductosFragment", "Selected Supermarket: " + nombreSupermercado);

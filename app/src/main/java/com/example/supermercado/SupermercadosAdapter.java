@@ -57,7 +57,8 @@ public class SupermercadosAdapter extends RecyclerView.Adapter<SupermercadosAdap
                     if (listener != null) {
                         int position = getAdapterPosition();
                         if (position != RecyclerView.NO_POSITION) {
-                            listener.onSupermercadoClick(position);
+                            Supermercado supermercado = supermercados.get(position);
+                            listener.onSupermercadoClick(position, supermercado);
                         }
                     }
                 }
@@ -66,6 +67,7 @@ public class SupermercadosAdapter extends RecyclerView.Adapter<SupermercadosAdap
     }
 
     public interface OnSupermercadoClickListener {
-        void onSupermercadoClick(int position);
+        void onSupermercadoClick(int position, Supermercado supermercado);
     }
 }
+
