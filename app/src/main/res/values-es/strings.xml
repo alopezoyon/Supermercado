@@ -27,4 +27,6 @@
     <string name="error_maps">Error al abrir Google Maps</string>
     <string name="change_language">Cambiar idioma</string>
     <string name="select_language">Elegir idioma</string>
+    <string name="agregar_notas">Agregar Nota</string>
+    <string name="guardar_nota">Guardar nota</string>
 </resources>

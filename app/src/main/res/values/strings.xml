@@ -31,4 +31,6 @@
         <item>English</item>
         <item>Français</item>
     </array>
+    <string name="agregar_notas">Agregar Nota</string>
+    <string name="guardar_nota">Guardar nota</string>
 </resources>
