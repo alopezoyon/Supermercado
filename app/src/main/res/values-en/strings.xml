@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Supermarkey</string>
+    <string name="app_name">Supermarket</string>
     <string name="btnLogin">Log In</string>
     <string name="btnRegister">Sign Up</string>
     <string name="login_success">Successful login</string>
@@ -29,4 +29,6 @@
     <string name="select_language">Select Language</string>
     <string name="agregar_notas">Add Note</string>
     <string name="guardar_nota">Save Note</string>
+    <string name="message_alert">Alert message</string>
+    <string name="noti_de">Notification of</string>
 </resources>

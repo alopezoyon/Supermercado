@@ -33,4 +33,6 @@
     </array>
     <string name="agregar_notas">Agregar Nota</string>
     <string name="guardar_nota">Guardar nota</string>
+    <string name="message_alert">Mensaje de alerta</string>
+    <string name="noti_de">Notificación de</string>
 </resources>

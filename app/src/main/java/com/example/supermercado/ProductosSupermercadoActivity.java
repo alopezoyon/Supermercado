@@ -3,9 +3,13 @@ package com.example.supermercado;
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,8 +30,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -109,7 +116,6 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
                 String nota = input.getText().toString();
                 if (!nota.isEmpty()) {
                     guardarNotaEnArchivo(nota);
-                    mostrarNotificacion();
                 }
             }
         });
@@ -129,45 +135,60 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
             String fileName = "nota_" + timeStamp + ".txt";
 
-            File dir = new File(Environment.getExternalStorageDirectory(), "NotasSupermercado");
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            File file = new File(dir, fileName);
-            FileWriter writer = new FileWriter(file);
-            writer.append(nota);
-            writer.flush();
-            writer.close();
+            OutputStreamWriter fichero = new OutputStreamWriter(openFileOutput(fileName, Context.MODE_PRIVATE));
+            fichero.write(nota);
+            fichero.close();
+            mostrarNotificacion(fileName);
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Error al guardar la nota en el archivo.", Toast.LENGTH_SHORT).show();
         }
     }
+    private void mostrarNotificacion(String filename) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new
+                    String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 11);
+        }
 
-    private void mostrarNotificacion() {
+        NotificationManager elManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(this, "IdCanal");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence channelName = "Notas";
-            String channelDescription = "Canal para mostrar notificaciones de notas";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel("canal_notas", channelName, importance);
-            channel.setDescription(channelDescription);
-
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            NotificationChannel elCanal= new NotificationChannel("IdCanal", "NombreCanal",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            elCanal.setDescription("Descripción del canal");
+            elCanal.enableLights(true);
+            elCanal.setLightColor(Color.RED);
+            elCanal.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            elCanal.enableVibration(true);
+            elManager.createNotificationChannel(elCanal);
         }
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "canal_notas")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentTitle("Nota Guardada")
-                .setContentText("Tu nota ha sido guardada correctamente.")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        elBuilder.setSmallIcon(android.R.drawable.stat_sys_warning)
+                .setContentTitle(getString(R.string.message_alert))
+                .setContentText(R.string.noti_de + " " + R.string.app_name)
+                .setVibrate(new long[]{0, 1000, 500, 1000})
+                .setAutoCancel(true);
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-            return;
+        Intent i = new Intent(this, VerNotaActivity.class);
+        i.putExtra("ARCHIVO_NOTA", filename);
+        PendingIntent pendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getActivity(this,
+                    0, i, PendingIntent.FLAG_UPDATE_CURRENT| PendingIntent.FLAG_IMMUTABLE); }
+        else { pendingIntent = PendingIntent.getActivity(this,
+                0, i, PendingIntent.FLAG_UPDATE_CURRENT);
         }
-        notificationManager.notify(1, builder.build());
+
+        elBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher_foreground))
+                .setSmallIcon(android.R.drawable.stat_sys_warning)
+                .setContentTitle(getString(R.string.message_alert))
+                .setContentText(R.string.noti_de + " " + R.string.app_name)
+                .setVibrate(new long[]{0, 1000, 500, 1000})
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        elManager.notify(1, elBuilder.build());
     }
 
     private void openGoogleMapsForSupermarket(String localizacionSupermercado) {
