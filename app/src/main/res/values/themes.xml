@@ -1,4 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <!-- Base application theme. -->
     <style name="Base.Theme.Supermercado" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
@@ -7,11 +8,35 @@
 
     <style name="Theme.Supermercado" parent="Base.Theme.Supermercado" />
 
+    <!-- Estilo con Botones Negros, Letra Naranja y Fondo Gris -->
+    <style name="StyleBlackButtons" parent="Base.Theme.Supermercado">
+        <item name="android:buttonStyle">@style/Widget.Button.Black</item>
+        <item name="android:textColor">@color/orange</item>
+        <item name="android:windowBackground">@color/lightGray</item>
+    </style>
+
+    <!-- Widget para Botones Negros -->
+    <style name="Widget.Button.Black" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/black_button_background</item>
+    </style>
+
+    <!-- Estilo Actual (AppTheme) -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <!-- Estilo con Botones Verdes, Letra Gris y Fondo Azul -->
+    <style name="StyleGreenButtons" parent="Base.Theme.Supermercado">
+        <item name="android:buttonStyle">@style/Widget.Button.Green</item>
+        <item name="android:textColor">@color/lightGray</item>
+        <item name="android:windowBackground">@color/blue</item>
+    </style>
+
+    <!-- Widget para Botones Verdes -->
+    <style name="Widget.Button.Green" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/green_button_background</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">

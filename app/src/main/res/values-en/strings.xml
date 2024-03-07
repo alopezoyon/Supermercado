@@ -31,4 +31,8 @@
     <string name="guardar_nota">Save Note</string>
     <string name="message_alert">Alert message</string>
     <string name="noti_de">Notification of</string>
+    <string name="change_color">Change colour</string>
+    <string name="select_color">Select a colour</string>
+    <string name="add_product">Add Product</string>
+    <string name="go">Go</string>
 </resources>

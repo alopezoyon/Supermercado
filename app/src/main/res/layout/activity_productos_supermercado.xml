@@ -42,7 +42,7 @@
         android:layout_below="@id/recyclerViewProductosSupermercado"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Añadir Producto" />
+        android:text="@string/add_product" />
 
     <Button
         android:id="@+id/btnCalculateDistance"
@@ -51,7 +51,7 @@
         android:layout_below="@id/btnAddProduct"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:text="Ir" />
+        android:text="@string/go" />
 
 </RelativeLayout>
 

@@ -7,16 +7,20 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -97,11 +101,91 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add_note) {
+        int itemId = item.getItemId();
+
+        if (itemId == R.id.menu_change_language) {
+            showLanguageDialog();
+            return true;
+        } else if (itemId == R.id.menu_change_color) {
+            showColorDialog();
+            return true;
+        } else if (item.getItemId() == R.id.action_add_note){
             mostrarDialogoAgregarNota();
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        else {
+            return true;
+        }
+    }
+
+    private void showColorDialog() {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle(R.string.select_color);
+
+        int[] colorOptions = getResources().getIntArray(R.array.colorOptions);
+
+        if (colorOptions != null && colorOptions.length > 0) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
+
+            for (int color : colorOptions) {
+                adapter.add(Integer.toString(color));
+            }
+
+            builder.setAdapter(adapter, (dialog, which) -> {
+                int selectedColor = colorOptions[which];
+                changeBackgroundColor(selectedColor);
+            });
+        } else {
+            builder.setMessage("No hay colores disponibles.");
+        }
+
+        builder.create().show();
+    }
+
+    private void changeBackgroundColor(int color) {
+        View rootView = getWindow().getDecorView().getRootView();
+        rootView.setBackgroundColor(color);
+        savePreferences(color);
+    }
+
+    private void showLanguageDialog() {
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
+        builder.setTitle(R.string.select_language)
+                .setItems(R.array.language_options, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            setLocale("es");
+                            break;
+                        case 1:
+                            setLocale("en");
+                            break;
+                        case 2:
+                            setLocale("fr");
+                            break;
+                    }
+                });
+
+        builder.create().show();
+    }
+
+    private void setLocale(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+
+        Configuration configuration = getResources().getConfiguration();
+        configuration.setLocale(locale);
+
+        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+        recreate();
+    }
+
+    private void savePreferences(int color) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putInt("color", color);
+        editor.apply();
     }
 
     private void mostrarDialogoAgregarNota() {

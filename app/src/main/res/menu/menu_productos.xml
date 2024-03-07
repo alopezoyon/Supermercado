@@ -5,4 +5,16 @@
         android:icon="@android:drawable/ic_menu_edit"
         android:title="Agregar Nota"
         app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/menu_change_language"
+        android:title="@string/change_language"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_launcher_background"/>
+
+    <item
+        android:id="@+id/menu_change_color"
+        android:title="@string/change_color"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_launcher_foreground"/>
 </menu>
