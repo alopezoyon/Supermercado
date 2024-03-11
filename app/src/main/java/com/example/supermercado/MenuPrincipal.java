@@ -105,10 +105,7 @@ public class MenuPrincipal extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if (itemId == R.id.menu_change_language) {
-            showLanguageDialog();
-            return true;
-        } else if (itemId == R.id.menu_change_color) {
+        if (itemId == R.id.menu_change_color) {
             showColorDialog();
             return true;
         } else if (item.getItemId() == R.id.action_add_note){
@@ -238,26 +235,6 @@ public class MenuPrincipal extends AppCompatActivity implements
         savePreferences(color);
     }
 
-    private void showLanguageDialog() {
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setTitle(R.string.select_language)
-                .setItems(R.array.language_options, (dialog, which) -> {
-                    switch (which) {
-                        case 0:
-                            setLocale("es");
-                            break;
-                        case 1:
-                            setLocale("en");
-                            break;
-                        case 2:
-                            setLocale("fr");
-                            break;
-                    }
-                });
-
-        builder.create().show();
-    }
-
     private void loadPreferences() {
         loadSavedLanguage();
 
@@ -273,16 +250,6 @@ public class MenuPrincipal extends AppCompatActivity implements
 
         getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
 
-        saveLanguagePreference(languageCode);
-
-    }
-
-    private void saveLanguagePreference(String languageCode) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-
-        editor.putString("language", languageCode);
-        editor.apply();
     }
 
     private void savePreferences(int color) {
