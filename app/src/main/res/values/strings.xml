@@ -13,7 +13,7 @@
     <string name="edtName">Nombre</string>
     <string name="edtLastName">Apellido</string>
     <string name="edtEmail">Correo Electrónico</string>
-    <string name="welcome_message">Bienvenido,</string>
+    <string name="welcome_message">"Bienvenido, "</string>
     <string name="btnAgregarSupermercado">Agregar Supermercado</string>
     <string name="edtNombreProducto">Nombre del producto</string>
     <string name="edtPrecioProducto">Precio del producto</string>
@@ -22,7 +22,7 @@
     <string name="completar_campos">Por favor, complete todos los campos</string>
     <string name="edtNombreSupermercado">Nombre del supermercado</string>
     <string name="edtLocalizacionSupermercado">Localización</string>
-    <string name="producto_de">Productos de</string>
+    <string name="producto_de">"Productos de "</string>
     <string name="error_maps">Error al abrir Google Maps</string>
     <string name="change_language">Cambiar idioma</string>
     <string name="select_language">Elegir idioma</string>

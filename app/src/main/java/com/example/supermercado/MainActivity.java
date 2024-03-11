@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        loadPreferences();
 
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
@@ -37,6 +38,14 @@ public class MainActivity extends AppCompatActivity {
         btnRegister = findViewById(R.id.btnRegister);
 
         databaseHelper = new DatabaseHelper(this);
+
+
+        edtUsername.setHint(getString(R.string.hint_username));
+        edtPassword.setHint(getString(R.string.hint_password));
+        btnLogin.setText(getString(R.string.btnLogin));
+        btnRegister.setText(getString(R.string.btnRegister));
+
+
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +89,45 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(getString(R.string.dialog_message_invalid_credentials) + attempts);
         builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
         builder.show();
+    }
+
+    private void loadPreferences() {
+        loadSavedLanguage();
+        loadSavedColor();
+    }
+
+    private void loadSavedLanguage() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String savedLanguage = preferences.getString("language", "");
+
+        if (!savedLanguage.isEmpty()) {
+            setLocale(savedLanguage);
+        }
+    }
+
+    private void setLocale(String languageCode) {
+        Locale locale = new Locale(languageCode);
+        Locale.setDefault(locale);
+
+        Configuration configuration = getResources().getConfiguration();
+        configuration.setLocale(locale);
+
+        getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
+
+    }
+
+    private void loadSavedColor() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int savedColor = preferences.getInt("color", 0);
+
+        if (savedColor != 0) {
+            changeBackgroundColor(savedColor);
+        }
+    }
+
+    private void changeBackgroundColor(int color) {
+        View rootView = getWindow().getDecorView().getRootView();
+        rootView.setBackgroundColor(color);
     }
 
 }
