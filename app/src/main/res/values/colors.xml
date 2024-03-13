@@ -8,4 +8,6 @@
     <color name="orange">#FFA500</color>
     <color name="lightGray">#D3D3D3</color>
     <color name="blue">#0000FF</color>
+    <color name="yellow">#FFFF00</color>
+    <color name="purple">#800080</color>
 </resources>

@@ -1,21 +1,40 @@
 package com.example.supermercado;
 
+import static androidx.core.graphics.drawable.DrawableCompat.applyTheme;
+
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -90,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_idioma, menu);
+        getMenuInflater().inflate(R.menu.menu_productos, menu);
         return true;
     }
 
@@ -101,10 +120,99 @@ public class MainActivity extends AppCompatActivity {
         if (itemId == R.id.menu_change_language) {
             showLanguageDialog();
             return true;
+        } else if (itemId == R.id.menu_change_color) {
+            showColorDialog();
+            return true;
         }
         else {
             return true;
         }
+    }
+
+    private void showColorDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.select_color);
+
+        String[] colorOptions = getResources().getStringArray(R.array.colorOptions);
+
+        if (colorOptions != null && colorOptions.length > 0) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, colorOptions);
+
+            builder.setAdapter(adapter, (dialog, which) -> {
+                String selectedStyle = colorOptions[which];
+                applySelectedStyle(selectedStyle);
+            });
+        } else {
+            builder.setMessage("No hay estilos disponibles.");
+        }
+
+        builder.create().show();
+    }
+
+    private void applySelectedStyle(String selectedStyle) {
+        int styleResId;
+
+        switch (selectedStyle) {
+            case "Estilo 1":
+                styleResId = R.style.Estilo1;
+                break;
+            case "Estilo 2":
+                styleResId = R.style.Estilo2;
+                break;
+            case "Estilo 3":
+                styleResId = R.style.Estilo3;
+                break;
+            default:
+                styleResId = R.style.AppTheme;
+                break;
+        }
+
+        applyTheme(styleResId);
+        applyButtonAndBackgroundStyles(styleResId);
+        saveColorPreference(styleResId);
+    }
+
+    private void applyTheme(int styleResId) {
+        setTheme(styleResId);
+    }
+
+    private void applyButtonAndBackgroundStyles(int styleResId) {
+        Button btnLogin = findViewById(R.id.btnLogin);
+        Button btnRegister = findViewById(R.id.btnRegister);
+
+        TypedArray styledAttributes = getTheme().obtainStyledAttributes(styleResId, new int[] {
+                androidx.constraintlayout.widget.R.attr.buttonStyle
+        });
+
+        int buttonStyleResId = styledAttributes.getResourceId(0, 0);
+        styledAttributes.recycle();
+
+        if (buttonStyleResId != 0) {
+            btnLogin.setTextAppearance(this, buttonStyleResId);
+            btnRegister.setTextAppearance(this, buttonStyleResId);
+            btnLogin.setBackgroundResource(buttonStyleResId);
+            btnRegister.setBackgroundResource(buttonStyleResId);
+            View rootView = getWindow().getDecorView().getRootView();
+            rootView.setBackgroundResource(styleResId);
+        }
+    }
+
+
+    private void loadSavedColor() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int savedColor = preferences.getInt("color", 0);
+
+        if (savedColor != 0) {
+            applySelectedStyle(String.valueOf(savedColor));
+        }
+    }
+
+    private void saveColorPreference(int color) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+
+        editor.putInt("color", color);
+        editor.apply();
     }
 
 
@@ -142,11 +250,9 @@ public class MainActivity extends AppCompatActivity {
 
         editor.putString("language", languageCode);
         editor.apply();
-        Log.d("MainActivity", "Se ha cambiado la pref del idioma a " + languageCode);
     }
 
     private void loadPreferences() {
-        Log.d("MainActivity","Se han cargado las preferencias");
         loadSavedLanguage();
         loadSavedColor();
     }
@@ -174,22 +280,6 @@ public class MainActivity extends AppCompatActivity {
         if (preferencesLoaded) {
             recreate();
         }
-    }
-
-    private void loadSavedColor() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int savedColor = preferences.getInt("color", 0);
-
-        Log.d("MainActivity", "loadSavedColor: Loaded color from preferences - " + savedColor);
-
-        if (savedColor != 0) {
-            changeBackgroundColor(savedColor);
-        }
-    }
-
-    private void changeBackgroundColor(int color) {
-        View rootView = getWindow().getDecorView().getRootView();
-        rootView.setBackgroundColor(color);
     }
 
 }

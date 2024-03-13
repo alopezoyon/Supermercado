@@ -86,8 +86,6 @@ public class MenuPrincipal extends AppCompatActivity implements
                 }
             });
         }
-
-        setSupportActionBar(findViewById(R.id.toolbar));
     }
 
     private void cargarSupermercadosDesdeDB() {
@@ -95,9 +93,13 @@ public class MenuPrincipal extends AppCompatActivity implements
         listaSupermercados.addAll(databaseHelper.getSupermercados());
     }
 
+    private void loadPreferences() {
+        loadSavedLanguage();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_productos, menu);
+        getMenuInflater().inflate(R.menu.menu_nota, menu);
         return true;
     }
 
@@ -105,10 +107,7 @@ public class MenuPrincipal extends AppCompatActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
 
-        if (itemId == R.id.menu_change_color) {
-            showColorDialog();
-            return true;
-        } else if (item.getItemId() == R.id.action_add_note){
+        if (itemId == R.id.menu_change_language) {
             mostrarDialogoAgregarNota();
             return true;
         }
@@ -179,7 +178,7 @@ public class MenuPrincipal extends AppCompatActivity implements
     }
 
     private void mostrarDialogoAgregarNota() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Agregar Nota");
         final EditText input = new EditText(this);
         builder.setView(input);
@@ -204,43 +203,6 @@ public class MenuPrincipal extends AppCompatActivity implements
         builder.show();
     }
 
-    private void showColorDialog() {
-        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setTitle(R.string.select_color);
-
-        int[] colorOptions = getResources().getIntArray(R.array.colorOptions);
-
-        if (colorOptions != null && colorOptions.length > 0) {
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
-
-            for (int color : colorOptions) {
-                adapter.add(Integer.toString(color));
-                Log.d("Colores",Integer.toString(color));
-            }
-
-            builder.setAdapter(adapter, (dialog, which) -> {
-                int selectedColor = colorOptions[which];
-                changeBackgroundColor(selectedColor);
-            });
-        } else {
-            builder.setMessage("No hay colores disponibles.");
-        }
-
-        builder.create().show();
-    }
-
-    private void changeBackgroundColor(int color) {
-        View rootView = getWindow().getDecorView().getRootView();
-        rootView.setBackgroundColor(color);
-        savePreferences(color);
-    }
-
-    private void loadPreferences() {
-        loadSavedLanguage();
-
-        loadSavedColor();
-    }
-
     private void setLocale(String languageCode) {
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
@@ -252,29 +214,12 @@ public class MenuPrincipal extends AppCompatActivity implements
 
     }
 
-    private void savePreferences(int color) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        SharedPreferences.Editor editor = preferences.edit();
-
-        editor.putInt("color", color);
-        editor.apply();
-    }
-
     private void loadSavedLanguage() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String savedLanguage = preferences.getString("language", "");
 
         if (!savedLanguage.isEmpty()) {
             setLocale(savedLanguage);
-        }
-    }
-
-    private void loadSavedColor() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        int savedColor = preferences.getInt("color", 0);
-
-        if (savedColor != 0) {
-            changeBackgroundColor(savedColor);
         }
     }
 
