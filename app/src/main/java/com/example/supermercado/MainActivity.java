@@ -139,8 +139,8 @@ public class MainActivity extends AppCompatActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, colorOptions);
 
             builder.setAdapter(adapter, (dialog, which) -> {
-                String selectedStyle = colorOptions[which];
-                applySelectedStyle(selectedStyle);
+                int selectedColor = getColorForStyle(colorOptions[which]);
+                changeBackgroundColor(selectedColor);
             });
         } else {
             builder.setMessage("No hay estilos disponibles.");
@@ -149,52 +149,23 @@ public class MainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
-    private void applySelectedStyle(String selectedStyle) {
-        int styleResId;
-
-        switch (selectedStyle) {
+    private int getColorForStyle(String style) {
+        switch (style) {
             case "Estilo 1":
-                styleResId = R.style.Estilo1;
-                break;
+                return getResources().getColor(R.color.colorAccent);
             case "Estilo 2":
-                styleResId = R.style.Estilo2;
-                break;
+                return getResources().getColor(R.color.orange);
             case "Estilo 3":
-                styleResId = R.style.Estilo3;
-                break;
+                return getResources().getColor(R.color.yellow);
             default:
-                styleResId = R.style.AppTheme;
-                break;
+                return getResources().getColor(R.color.white);
         }
-
-        applyTheme(styleResId);
-        applyButtonAndBackgroundStyles(styleResId);
-        saveColorPreference(styleResId);
     }
 
-    private void applyTheme(int styleResId) {
-        setTheme(styleResId);
-    }
-
-    private void applyButtonAndBackgroundStyles(int styleResId) {
-        Button btnLogin = findViewById(R.id.btnLogin);
-        Button btnRegister = findViewById(R.id.btnRegister);
-
-        TypedArray styledAttributes = getTheme().obtainStyledAttributes(styleResId, new int[] {
-                androidx.constraintlayout.widget.R.attr.buttonStyle
-        });
-
-        int buttonStyleResId = styledAttributes.getResourceId(0, 0);
-        styledAttributes.recycle();
-
-        if (buttonStyleResId != 0) {
-            btnLogin.setTextAppearance(this, buttonStyleResId);
-            btnRegister.setTextAppearance(this, buttonStyleResId);
-            btnLogin.setBackgroundResource(buttonStyleResId);
-            btnRegister.setBackgroundResource(buttonStyleResId);
-            View rootView = getWindow().getDecorView().getRootView();
-            rootView.setBackgroundResource(styleResId);
-        }
+    private void changeBackgroundColor(int color) {
+        View rootView = getWindow().getDecorView().getRootView();
+        rootView.setBackgroundColor(color);
+        saveColorPreference(color);
     }
 
 
@@ -203,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         int savedColor = preferences.getInt("color", 0);
 
         if (savedColor != 0) {
-            applySelectedStyle(String.valueOf(savedColor));
+            changeBackgroundColor(savedColor);
         }
     }
 

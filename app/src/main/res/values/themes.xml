@@ -8,6 +8,18 @@
 
     <style name="Theme.Supermercado" parent="Base.Theme.Supermercado" />
 
+    <!-- Estilo con Botones Negros, Letra Naranja y Fondo Gris -->
+    <style name="StyleBlackButtons" parent="Base.Theme.Supermercado">
+        <item name="android:buttonStyle">@style/Widget.Button.Black</item>
+        <item name="android:textColor">@color/orange</item>
+        <item name="android:windowBackground">@color/lightGray</item>
+    </style>
+
+    <!-- Widget para Botones Negros -->
+    <style name="Widget.Button.Black" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/black_button_background</item>
+    </style>
+
     <!-- Estilo Actual (AppTheme) -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -15,40 +27,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- Estilo 1: Botones Negros, Letra Naranja y Fondo Gris -->
-    <style name="Estilo1" parent="Base.Theme.Supermercado">
-        <item name="android:buttonStyle">@style/Widget.Button.Black.Estilo1</item>
-        <item name="android:textColor">@color/orange</item>
-        <item name="android:windowBackground">@color/lightGray</item>
-    </style>
-
-    <!-- Widget para Botones Negros (Estilo 1) -->
-    <style name="Widget.Button.Black.Estilo1" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/black_button_background</item>
-    </style>
-
-    <!-- Estilo 2: Botones Verdes, Letra Gris y Fondo Azul -->
-    <style name="Estilo2" parent="Base.Theme.Supermercado">
-        <item name="android:buttonStyle">@style/Widget.Button.Green.Estilo2</item>
+    <!-- Estilo con Botones Verdes, Letra Gris y Fondo Azul -->
+    <style name="StyleGreenButtons" parent="Base.Theme.Supermercado">
+        <item name="android:buttonStyle">@style/Widget.Button.Green</item>
         <item name="android:textColor">@color/lightGray</item>
         <item name="android:windowBackground">@color/blue</item>
     </style>
 
-    <!-- Widget para Botones Verdes (Estilo 2) -->
-    <style name="Widget.Button.Green.Estilo2" parent="Widget.AppCompat.Button">
+    <!-- Widget para Botones Verdes -->
+    <style name="Widget.Button.Green" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/green_button_background</item>
-    </style>
-
-    <!-- Estilo 3: Botones Rojos, Letra Amarilla y Fondo Rojo -->
-    <style name="Estilo3" parent="Base.Theme.Supermercado">
-        <item name="android:buttonStyle">@style/Widget.Button.Red.Estilo3</item>
-        <item name="android:textColor">@color/yellow</item>
-        <item name="android:windowBackground">@color/colorAccent</item>
-    </style>
-
-    <!-- Widget para Botones Rojos (Estilo 3) -->
-    <style name="Widget.Button.Red.Estilo3" parent="Widget.AppCompat.Button">
-        <item name="android:background">@drawable/red_button_background</item>
     </style>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">

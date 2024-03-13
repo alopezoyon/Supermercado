@@ -108,7 +108,6 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
 
     private void loadPreferences() {
         loadSavedLanguage();
-
         loadSavedColor();
     }
 

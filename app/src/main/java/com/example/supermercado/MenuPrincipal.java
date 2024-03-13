@@ -93,8 +93,24 @@ public class MenuPrincipal extends AppCompatActivity implements
         listaSupermercados.addAll(databaseHelper.getSupermercados());
     }
 
+    private void changeBackgroundColor(int color) {
+        View rootView = getWindow().getDecorView().getRootView();
+        rootView.setBackgroundColor(color);
+    }
+
+
+    private void loadSavedColor() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        int savedColor = preferences.getInt("color", 0);
+
+        if (savedColor != 0) {
+            changeBackgroundColor(savedColor);
+        }
+    }
+
     private void loadPreferences() {
         loadSavedLanguage();
+        loadSavedColor();
     }
 
     @Override
