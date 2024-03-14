@@ -19,7 +19,7 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supermercado_database";
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 20;
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
@@ -64,17 +64,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 
 
+    //Método usado si queremos resetear la base de datos
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+
         /*
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_SUPERMERCADOS);
-        db.execSQL("DROP TABLE IF EXISTS " + "productos");
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCTOS_SUPERMERCADO);
 
         onCreate(db);
 
          */
+
     }
 
 
@@ -166,7 +168,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         cursor.close();
-        Log.d("GetProductosPorSupermercado", "La lista tiene "+ listaProductos.size() + " elementos");
 
         return listaProductos;
     }
@@ -190,6 +191,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_PRODUCTO_PRECIO, precio);
         db.insert(TABLE_PRODUCTOS_SUPERMERCADO, null, values);
         db.close();
+    }
+
+    //Método para comprobar que el supermercado no existe ya en la base de datos
+    public boolean supermercadoExiste(String nombreSupermercado) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SUPERMERCADOS +
+                " WHERE " + COLUMN_SUPERMERCADO_NOMBRE + " = ?", new String[]{nombreSupermercado});
+        boolean existe = cursor.getCount() > 0;
+        cursor.close();
+        return existe;
+    }
+
+    //Método para comprobar que el producto no existe ya en la base de datos
+    public boolean productoExiste(String nombreSupermercado, String nombreProducto) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_PRODUCTOS_SUPERMERCADO +
+                        " WHERE " + COLUMN_SUPERMERCADO_NOMBRE + " = ? AND " + COLUMN_PRODUCTO_NOMBRE + " = ?",
+                new String[]{nombreSupermercado, nombreProducto});
+        boolean existe = cursor.getCount() > 0;
+        cursor.close();
+        return existe;
     }
 
 }

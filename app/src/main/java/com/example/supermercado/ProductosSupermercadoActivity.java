@@ -37,7 +37,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         String localizacionSupermercado = getIntent().getStringExtra("LOCALIZACION_SUPERMERCADO");
 
         TextView txtSupermercado = findViewById(R.id.txtSupermercado);
-        txtSupermercado.setText(getString(R.string.producto_de) + nombreSupermercado);
+        txtSupermercado.setText(getString(R.string.producto_de) + " " + nombreSupermercado);
 
         databaseHelper = new DatabaseHelper(this);
         listaProductos = new ArrayList<>();
@@ -134,8 +134,13 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
     //Método utilizado en el caso de haber añadido un producto
     @Override
     public void onProductoAdded(String nombre, double precio) {
-        databaseHelper.addProductoASupermercado(nombreSupermercado, nombre, precio);
-        cargarProductosDesdeDB(nombreSupermercado);
-        productosAdapter.notifyDataSetChanged();
+        if (databaseHelper.productoExiste(nombreSupermercado,nombre)){
+            databaseHelper.addProductoASupermercado(nombreSupermercado, nombre, precio);
+            cargarProductosDesdeDB(nombreSupermercado);
+            productosAdapter.notifyDataSetChanged();
+        }
+        else {
+            Toast.makeText(this, "El producto ya existe en el supermercado", Toast.LENGTH_SHORT).show();
+        }
     }
 }
