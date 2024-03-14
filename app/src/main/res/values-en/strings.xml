@@ -35,4 +35,5 @@
     <string name="select_color">Select a colour</string>
     <string name="add_product">Add Product</string>
     <string name="go">Go</string>
+    <string name="username_exist">Username already exists</string>
 </resources>

@@ -1,11 +1,7 @@
 package com.example.supermercado;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +10,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+//Clase que implementa el Dialog que se abre al agregar un supemercado.
+//Hay que añadir un nombre y una localización.
+//Hay dos botones: Agregar y Cancelar.
 public class DialogAgregarSupermercado extends Dialog {
 
     private OnSupermercadoAddedListener listener;
@@ -23,6 +22,8 @@ public class DialogAgregarSupermercado extends Dialog {
         this.listener = listener;
     }
 
+    //Método para crear el dialog con su botones y que implementa un listener para añadir el supermercado a la base de datos
+    //en el caso de darle a "Agregar", si se da a "Cancelar" se pierde la información
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +51,7 @@ public class DialogAgregarSupermercado extends Dialog {
     }
 
 
+    //Interfaz que implementa el método para añadir el supermercado a la bd
     public interface OnSupermercadoAddedListener {
         void onSupermercadoAdded(String nombre, String localizacion);
 

@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+//Clase que implementa el Dialog que se abre al agregar un producto a un supermercado determinado.
+//Hay que añadir un nombre y un precio.
+//Hay dos botones: Agregar y Cancelar.
 public class DialogAgregarProducto extends Dialog {
 
     private OnProductoAddedListener listener;
@@ -16,6 +19,8 @@ public class DialogAgregarProducto extends Dialog {
         this.listener = listener;
     }
 
+    //Método para crear el dialog con su botones y que implementa un listener para añadir el producto a la base de datos
+    //en el caso de darle a "Agregar", si se da a "Cancelar" se pierde la información
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,7 @@ public class DialogAgregarProducto extends Dialog {
         });
     }
 
+    //Interfaz que implementa el método para añadir el producto a la bd
     public interface OnProductoAddedListener {
         void onProductoAdded(String nombre, double precio);
     }

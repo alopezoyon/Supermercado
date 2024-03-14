@@ -10,13 +10,22 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
+//Esta clase implementa la base de datos.
+//Contiene los datos de registro (username, password, email, name y lastname) de los usuarios (se guardan en la tabla "users")
+//Contiene los datos del supermercado (nombre_super, localizacion) en la tabla "supermercados"
+//Contiene también los productos de cada supermercado en la tabla "productos_supermercado".
+//Cada producto tiene su nombre y precio.
+
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "supermercado_database";
-    private static final int DATABASE_VERSION = 18;
+    private static final int DATABASE_VERSION = 19;
     private static final String TABLE_USERS = "users";
     private static final String COLUMN_USERNAME = "username";
     private static final String COLUMN_PASSWORD = "password";
+    private static final String COLUMN_EMAIL = "email";
+    private static final String COLUMN_NAME = "name";
+    private static final String COLUMN_LASTNAME = "lastname";
     private static final String TABLE_SUPERMERCADOS = "supermercados";
     private static final String COLUMN_SUPERMERCADO_NOMBRE = "nombre_super";
     private static final String COLUMN_SUPERMERCADO_LOCALIZACION = "localizacion";
@@ -29,19 +38,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    //Método para crear la base de datos
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createUserTableQuery = "CREATE TABLE " + TABLE_USERS +
                 " (" + COLUMN_USERNAME + " TEXT PRIMARY KEY, " +
-                COLUMN_PASSWORD + " TEXT)";
+                COLUMN_PASSWORD + " TEXT, " +
+                COLUMN_EMAIL + " TEXT, " +
+                COLUMN_NAME + " TEXT, " +
+                COLUMN_LASTNAME + " TEXT)";
         db.execSQL(createUserTableQuery);
-        Log.d("DatabaseCreation", "Tabla de usuarios creada");
 
         String createSupermercadosTableQuery = "CREATE TABLE " + TABLE_SUPERMERCADOS +
                 " (" + COLUMN_SUPERMERCADO_NOMBRE + " TEXT PRIMARY KEY, " +
                 COLUMN_SUPERMERCADO_LOCALIZACION + " TEXT)";
         db.execSQL(createSupermercadosTableQuery);
-        Log.d("DatabaseCreation", "Tabla de supermercados creada");
 
         String createProductosSupermercadoTableQuery = "CREATE TABLE " + TABLE_PRODUCTOS_SUPERMERCADO +
                 " (" + COLUMN_SUPERMERCADO_NOMBRE + " TEXT, " +
@@ -49,7 +60,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COLUMN_PRODUCTO_PRECIO + " REAL, " +
                 " FOREIGN KEY(" + COLUMN_SUPERMERCADO_NOMBRE + ") REFERENCES " + TABLE_SUPERMERCADOS + "(" + COLUMN_SUPERMERCADO_NOMBRE + "))";
         db.execSQL(createProductosSupermercadoTableQuery);
-        Log.d("DatabaseCreation", "Tabla de productos de supermercado creada");
     }
 
 
@@ -68,6 +78,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
+    //Método para validar credenciales a la hora de iniciar sesión
     public boolean isValidCredentials(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.query(
@@ -87,15 +98,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return isValid;
     }
 
-    public void addUser(String username, String password) {
+
+    //Método para añadir un usuario
+    public void addUser(String username, String password, String email, String name, String lastName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_USERNAME, username);
         values.put(COLUMN_PASSWORD, password);
+        values.put(COLUMN_EMAIL, email);
+        values.put(COLUMN_NAME, name);
+        values.put(COLUMN_LASTNAME, lastName);
         db.insert(TABLE_USERS, null, values);
         db.close();
     }
 
+
+    public boolean isUsernameExists(String username) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(
+                TABLE_USERS,
+                new String[]{COLUMN_USERNAME},
+                COLUMN_USERNAME + " = ?",
+                new String[]{username},
+                null,
+                null,
+                null
+        );
+
+        boolean exists = cursor.getCount() > 0;
+        cursor.close();
+        db.close();
+
+        return exists;
+    }
+
+    //Método para obtener los supermercados guardados
     public List<Supermercado> getSupermercados() {
         List<Supermercado> listaSupermercados = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -114,6 +151,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return listaSupermercados;
     }
 
+    //Obtener los productos de cada supermercado
     public List<Producto> getProductosPorSupermercado(String nombreSupermercado) {
         List<Producto> listaProductos = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
@@ -133,6 +171,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return listaProductos;
     }
 
+    //Método para añadir un supermercado
     public void addSupermercado(String nombre, String localizacion) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -142,6 +181,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    //Método para añadir un producto a un supemercado determinado
     public void addProductoASupermercado(String nombreSupermercado, String nombreProducto, Double precio) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();

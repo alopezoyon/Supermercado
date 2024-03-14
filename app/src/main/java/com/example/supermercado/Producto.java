@@ -1,5 +1,7 @@
 package com.example.supermercado;
 
+//Clase que implementa los productos que se guardan en la base de datos.
+//Cada producto tiene un nombre y un precio asociado.
 public class Producto {
     private String nombre;
     private double precio;

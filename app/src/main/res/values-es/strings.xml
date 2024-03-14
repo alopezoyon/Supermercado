@@ -35,4 +35,5 @@
     <string name="select_color">Selecciona un color</string>
     <string name="add_product">Añadir Producto</string>
     <string name="go">Ir</string>
+    <string name="username_exist">El nombre de usuario ya está registrado</string>
 </resources>

@@ -2,6 +2,7 @@ package com.example.supermercado;
 
 import java.util.List;
 
+//Esta clase implementa los supermercados. Tenemos para cada uno su nombre, localización y la lista de productos que tiene.
 public class Supermercado {
     private String nombre;
     private String localizacion;
@@ -19,10 +20,6 @@ public class Supermercado {
 
     public String getLocalizacion() {
         return localizacion;
-    }
-
-    public List<Producto> getListaProductos() {
-        return listaProductos;
     }
 }
 

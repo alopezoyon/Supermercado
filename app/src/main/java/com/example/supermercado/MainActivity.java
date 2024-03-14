@@ -1,23 +1,11 @@
 package com.example.supermercado;
 
-import static androidx.core.graphics.drawable.DrawableCompat.applyTheme;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,15 +16,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
+//Esta clase implementa la pantalla de logIn.
+//Se pide el usuario y contraseña.
+//También puedes registrar un usuario nuevo.
+//Hay un actionBar que posibilita ajustar las preferencias de color y de idioma.
+//Hay tres intentos de logIn, aparece un diálogo indicando si has fallado y el número de intentos restantes.
+//Si fallas 3 veces se bloquea los intentos durante 30 segundos.
 public class MainActivity extends AppCompatActivity {
 
     private EditText edtUsername, edtPassword;
@@ -44,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private int loginAttempts = 3;
     private DatabaseHelper databaseHelper;
     private boolean preferencesLoaded = false;
+    private Timer loginTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +58,6 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setText(getString(R.string.btnLogin));
         btnRegister.setText(getString(R.string.btnRegister));
 
-
-
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -89,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                         showAttemptsDialog(loginAttempts);
                     } else {
                         Toast.makeText(MainActivity.this, R.string.intentos_agotados, Toast.LENGTH_SHORT).show();
-                        //AQUÍ HAY QUE CAMBIAR ALGO
+                        blockLoginAttemptsFor30Seconds();
                     }
                 }
             }
@@ -107,12 +95,40 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
     }
 
+    //Método para bloquear los intentos de logIn
+    private void blockLoginAttemptsFor30Seconds() {
+        if (loginTimer != null) {
+            loginTimer.cancel();
+        }
+
+        loginTimer = new Timer();
+        loginTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                resetLoginAttempts();
+            }
+        }, 30000);
+    }
+
+    //Método para resetear el número de logIn a 3
+    private void resetLoginAttempts() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                loginAttempts = 3;
+            }
+        });
+    }
+
+
+    //Añadir el menú que posibilita cambiar las preferencias de color e idioma
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_productos, menu);
         return true;
     }
 
+    //Método que implementa las opciones de pulsar cada uno de los botones del menú
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -129,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Método que muestra el diálogo con los tres estilos posibles a elegir
     private void showColorDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.select_color);
@@ -149,10 +166,11 @@ public class MainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+    //Método para cambiar el color según la elección del estilo
     private int getColorForStyle(String style) {
         switch (style) {
             case "Estilo 1":
-                return getResources().getColor(R.color.colorAccent);
+                return getResources().getColor(R.color.white);
             case "Estilo 2":
                 return getResources().getColor(R.color.orange);
             case "Estilo 3":
@@ -162,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Método para cambiar el color del background establecido en preferencias
     private void changeBackgroundColor(int color) {
         View rootView = getWindow().getDecorView().getRootView();
         rootView.setBackgroundColor(color);
@@ -169,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //Método para cargar las preferencias de color
     private void loadSavedColor() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int savedColor = preferences.getInt("color", 0);
@@ -178,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Método para guardar las preferencias de color
     private void saveColorPreference(int color) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
@@ -187,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    //Método que muestra el diálogo con los tres idiomas posibles a elegir
     private void showLanguageDialog() {
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
         builder.setTitle(R.string.select_language)
@@ -207,6 +229,7 @@ public class MainActivity extends AppCompatActivity {
         builder.create().show();
     }
 
+    //Método que muestra un diálogo con el número de intentos restantes en caso de fallo en el logIn
     private void showAttemptsDialog(int attempts) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.dialog_title_failure);
@@ -215,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
+    //Método para guardar las preferencias de idioma
     private void saveLanguagePreference(String languageCode) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
@@ -223,11 +247,13 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
+    //Método que sirve para cargar las preferencias de idioma y color
     private void loadPreferences() {
         loadSavedLanguage();
         loadSavedColor();
     }
 
+    //Método para cargar las preferencias de idioma
     private void loadSavedLanguage() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String savedLanguage = preferences.getString("language", "");
@@ -237,6 +263,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //Método para establecer el idioma de preferencia
     private void setLocale(String languageCode) {
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);

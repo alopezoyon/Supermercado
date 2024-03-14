@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+//Esta clase implementa una actividad que sirve para mostrar el texto guardado en la nota en caso de pulsar en la notificación
+//que salta al guardarla.
 public class VerNotaActivity extends AppCompatActivity {
 
     @Override

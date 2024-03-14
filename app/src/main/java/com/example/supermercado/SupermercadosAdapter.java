@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+//Esta clase es un adaptador para un RecyclerView, que se utiliza para mostrar la lista de supermercados en la interfaz.
 public class SupermercadosAdapter extends RecyclerView.Adapter<SupermercadosAdapter.SupermercadoViewHolder> {
 
     private List<Supermercado> supermercados;

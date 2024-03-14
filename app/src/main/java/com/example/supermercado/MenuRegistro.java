@@ -14,6 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Locale;
 
+//Clase que implementa la pantalla de registro de un usuario
+//Se piden los siguientes datos: nombre, apellidos, email, usuario y contraseña
 public class MenuRegistro extends AppCompatActivity {
 
     private EditText edtName, edtLastName, edtEmail, edtUsername, edtPassword;
@@ -51,8 +53,13 @@ public class MenuRegistro extends AppCompatActivity {
                 String password = edtPassword.getText().toString();
 
                 if (!name.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
-                    databaseHelper.addUser(username, password);
-                    Toast.makeText(MenuRegistro.this, R.string.registration_success, Toast.LENGTH_SHORT).show();
+                    if (databaseHelper.isUsernameExists(username)){
+                        Toast.makeText(MenuRegistro.this, R.string.username_exist, Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        databaseHelper.addUser(username, password, email, name, lastName);
+                        Toast.makeText(MenuRegistro.this, R.string.registration_success, Toast.LENGTH_SHORT).show();
+                    }
 
                     Intent intent = new Intent(MenuRegistro.this, MainActivity.class);
                     startActivity(intent);
@@ -66,12 +73,14 @@ public class MenuRegistro extends AppCompatActivity {
         });
     }
 
+    //Método para cargar las preferencias de idioma y color
     private void loadPreferences() {
         loadSavedLanguage();
 
         loadSavedColor();
     }
 
+    //Método para cargar las preferencias de idioma
     private void loadSavedLanguage() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String savedLanguage = preferences.getString("language", "");
@@ -81,6 +90,7 @@ public class MenuRegistro extends AppCompatActivity {
         }
     }
 
+    //Método para cargar las preferencias de color
     private void loadSavedColor() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int savedColor = preferences.getInt("color", 0);
@@ -90,6 +100,7 @@ public class MenuRegistro extends AppCompatActivity {
         }
     }
 
+    //Método para establecer el idioma de preferencia
     private void setLocale(String languageCode) {
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
@@ -101,6 +112,7 @@ public class MenuRegistro extends AppCompatActivity {
 
     }
 
+    //Método para cambiar el color del background establecido en preferencias
     private void changeBackgroundColor(int color) {
         View rootView = getWindow().getDecorView().getRootView();
         rootView.setBackgroundColor(color);

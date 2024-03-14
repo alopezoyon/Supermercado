@@ -1,6 +1,5 @@
 package com.example.supermercado;
 
-import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,7 +18,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -39,6 +37,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+//Esta clase implementa el menú donde añadir supermercados.
+//Se muestra al principio un mensaje de bienvenida con el usuario que acaba de hacer logIn
 public class MenuPrincipal extends AppCompatActivity implements
         DialogAgregarSupermercado.OnSupermercadoAddedListener,
         SupermercadosAdapter.OnSupermercadoClickListener,
@@ -88,17 +88,20 @@ public class MenuPrincipal extends AppCompatActivity implements
         }
     }
 
+    //Método para cargar los supermercados guardados en la base de datos
     private void cargarSupermercadosDesdeDB() {
         listaSupermercados.clear();
         listaSupermercados.addAll(databaseHelper.getSupermercados());
     }
 
+    //Método para cambiar el color del background guardado en preferencias
     private void changeBackgroundColor(int color) {
         View rootView = getWindow().getDecorView().getRootView();
         rootView.setBackgroundColor(color);
     }
 
 
+    //Método para cargar las preferencias de color
     private void loadSavedColor() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         int savedColor = preferences.getInt("color", 0);
@@ -108,17 +111,20 @@ public class MenuPrincipal extends AppCompatActivity implements
         }
     }
 
+    //Método que sirve para cargar las preferencias de idioma y color
     private void loadPreferences() {
         loadSavedLanguage();
         loadSavedColor();
     }
 
+    //Método para crear el menú que posibilita guardar una nota relativa al supermercado
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_nota, menu);
         return true;
     }
 
+    //Método utilizado al pulsar el "agregar nota"
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -132,6 +138,7 @@ public class MenuPrincipal extends AppCompatActivity implements
         }
     }
 
+    //Método utilizado para guardar las notas en un archivo interno de la aplicación
     private void guardarNotaEnArchivo(String nota) {
         try {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
@@ -146,6 +153,8 @@ public class MenuPrincipal extends AppCompatActivity implements
             Toast.makeText(this, "Error al guardar la nota en el archivo.", Toast.LENGTH_SHORT).show();
         }
     }
+
+    //Método que usa para mostrar una notificación en caso de haber guardado una nota
     private void mostrarNotificacion(String filename) {
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
                 PackageManager.PERMISSION_GRANTED) {
@@ -193,6 +202,7 @@ public class MenuPrincipal extends AppCompatActivity implements
         elManager.notify(1, elBuilder.build());
     }
 
+    //Método que muestra el diálogo para agregar una nota
     private void mostrarDialogoAgregarNota() {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Agregar Nota");
@@ -219,6 +229,8 @@ public class MenuPrincipal extends AppCompatActivity implements
         builder.show();
     }
 
+
+    //Método para establecer el idioma de preferencia
     private void setLocale(String languageCode) {
         Locale locale = new Locale(languageCode);
         Locale.setDefault(locale);
@@ -230,6 +242,7 @@ public class MenuPrincipal extends AppCompatActivity implements
 
     }
 
+    //Método para cargar las preferencias de idioma
     private void loadSavedLanguage() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         String savedLanguage = preferences.getString("language", "");
@@ -239,6 +252,7 @@ public class MenuPrincipal extends AppCompatActivity implements
         }
     }
 
+    //Método que se usa para añadir un supermercado a la base de datos y volver a cargarlos para que se actualice la lista
     @Override
     public void onSupermercadoAdded(String nombre, String localizacion) {
         databaseHelper.addSupermercado(nombre, localizacion);
@@ -250,13 +264,14 @@ public class MenuPrincipal extends AppCompatActivity implements
 
     @Override
     public void onSupermercadoClick(int position) {
-        Log.d("MenuPrincipal", "Este no funciona");
     }
 
+    //Método que implementa Fragments. En el caso de posición horizontal, si se pulsa un supermercado,
+    //se muestran los productos de ese supermercado.
+    //Sino vas al menú de productos del supermercado.
     @Override
     public void onSupermercadoClick(int position, Supermercado supermercado) {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Log.d("MenuPrincipal","Has clickado");
             ProductosFragment productosFragment = new ProductosFragment();
             Bundle args = new Bundle();
             args.putString("nombreSupermercado", supermercado.getNombre());
@@ -275,6 +290,5 @@ public class MenuPrincipal extends AppCompatActivity implements
 
     @Override
     public void seleccionarElemento(String elemento) {
-        Log.d("MenuPrincipal", "Has seleccionado un elemento " + elemento);
     }
 }

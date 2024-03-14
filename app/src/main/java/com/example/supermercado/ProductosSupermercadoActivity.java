@@ -1,51 +1,25 @@
 package com.example.supermercado;
 
-import android.app.AlertDialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+//Esta clase implementa la actividad de mostrar los productos de supermercado determinado.
+//En esta actividad tenenemos la posibilidad de añadir un producto, incluyendo su nombre y precio.
+//Además, podemos pulsar el botón "Ir", que abre Google Maps con la ubicación guardada en "localización" del supermercado
 public class ProductosSupermercadoActivity extends AppCompatActivity implements DialogAgregarProducto.OnProductoAddedListener {
     private ProductosAdapter productosAdapter;
     private DatabaseHelper databaseHelper;
@@ -93,6 +67,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         });
     }
 
+    //Método para abrir Google Maps con la localización guardada
     private void openGoogleMapsForSupermarket(String localizacionSupermercado) {
         try {
             String supermercadoUri = Uri.encode(localizacionSupermercado);
@@ -105,6 +80,8 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
             Toast.makeText(ProductosSupermercadoActivity.this, R.string.error_maps, Toast.LENGTH_SHORT).show();
         }
     }
+
+    //Mismos métodos para cargar las preferencias
 
     private void loadPreferences() {
         loadSavedLanguage();
@@ -146,6 +123,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
     }
 
 
+    //Método para cargar los productos del supermercado
     private void cargarProductosDesdeDB(String nombreSupermercado) {
 
         listaProductos.clear();
@@ -153,6 +131,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
 
     }
 
+    //Método utilizado en el caso de haber añadido un producto
     @Override
     public void onProductoAdded(String nombre, double precio) {
         databaseHelper.addProductoASupermercado(nombreSupermercado, nombre, precio);

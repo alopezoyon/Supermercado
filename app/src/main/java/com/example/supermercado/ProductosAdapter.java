@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+//Esta clase es un adaptador para un RecyclerView, que se utiliza para mostrar la lista de productos en la interfaz.
 public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.ProductoViewHolder> {
 
     private List<Producto> listaProductos;
