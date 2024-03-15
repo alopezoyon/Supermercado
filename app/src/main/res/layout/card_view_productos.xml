@@ -14,14 +14,14 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/txtNombreSupermercado"
+            android:id="@+id/txtNombreProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/txtLocalizacionSupermercado"
+            android:id="@+id/txtPrecioProducto"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"

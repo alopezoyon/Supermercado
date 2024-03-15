@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, colorOptions);
 
             builder.setAdapter(adapter, (dialog, which) -> {
-                int selectedColor = getColorForStyle(colorOptions[which]);
+                int selectedColor = getStyleForColor(colorOptions[which]);
                 changeBackgroundColor(selectedColor);
             });
         } else {
@@ -167,16 +167,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Método para cambiar el color según la elección del estilo
-    private int getColorForStyle(String style) {
-        switch (style) {
+    private int getStyleForColor(String colorOption) {
+        switch (colorOption) {
             case "Estilo 1":
-                return getResources().getColor(R.color.white);
+                return R.style.WhiteBackground;
             case "Estilo 2":
-                return getResources().getColor(R.color.orange);
+                return R.style.OrangeBackground;
             case "Estilo 3":
-                return getResources().getColor(R.color.yellow);
+                return R.style.YellowBackground;
             default:
-                return getResources().getColor(R.color.white);
+                return R.style.WhiteBackground;
         }
     }
 
