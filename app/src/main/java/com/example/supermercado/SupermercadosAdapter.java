@@ -26,7 +26,7 @@ public class SupermercadosAdapter extends RecyclerView.Adapter<SupermercadosAdap
     @NonNull
     @Override
     public SupermercadoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_supermercados_adapter, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_view_supermercado, parent, false);
         return new SupermercadoViewHolder(view);
     }
 
