@@ -3,6 +3,7 @@ package com.example.supermercado;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -45,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
             preferencesLoaded = true;
         }
 
+        mostrarNotificacion();
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
         btnLogin = findViewById(R.id.btnLogin);
@@ -280,4 +284,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void mostrarNotificacion() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new
+                    String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 11);
+        }
+    }
 }
