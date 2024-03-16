@@ -255,7 +255,7 @@ public class MenuPrincipal extends AppCompatActivity implements
     //Método que se usa para añadir un supermercado a la base de datos y volver a cargarlos para que se actualice la lista
     @Override
     public void onSupermercadoAdded(String nombre, String localizacion) {
-        if (databaseHelper.supermercadoExiste(nombre)){
+        if (!databaseHelper.supermercadoExiste(nombre)){
             databaseHelper.addSupermercado(nombre, localizacion);
 
             cargarSupermercadosDesdeDB();

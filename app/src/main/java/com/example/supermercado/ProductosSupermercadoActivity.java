@@ -134,7 +134,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
     //Método utilizado en el caso de haber añadido un producto
     @Override
     public void onProductoAdded(String nombre, double precio) {
-        if (databaseHelper.productoExiste(nombreSupermercado,nombre)){
+        if (!databaseHelper.productoExiste(nombreSupermercado,nombre)){
             databaseHelper.addProductoASupermercado(nombreSupermercado, nombre, precio);
             cargarProductosDesdeDB(nombreSupermercado);
             productosAdapter.notifyDataSetChanged();
