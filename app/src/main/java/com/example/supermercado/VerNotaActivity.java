@@ -8,12 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
-//Esta clase implementa una actividad que sirve para mostrar el texto guardado en la nota en caso de pulsar en la notificación
-//que salta al guardarla.
 public class VerNotaActivity extends AppCompatActivity {
 
     @Override
@@ -21,21 +19,38 @@ public class VerNotaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ver_nota);
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            String fileName = intent.getStringExtra("ARCHIVO_NOTA");
+        TextView textViewNota = findViewById(R.id.textViewNota);
 
-            String notaContenido = leerContenidoNota(fileName);
-            TextView textView = findViewById(R.id.textViewNota);
-            textView.setText(notaContenido);
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("NOMBRE_SUPERMERCADO")) {
+            String nombreSupermercado = intent.getStringExtra("NOMBRE_SUPERMERCADO");
+            mostrarNotasPorSupermercado(nombreSupermercado, textViewNota);
         }
     }
 
-    private String leerContenidoNota(String fileName) {
+    private void mostrarNotasPorSupermercado(String nombreSupermercado, TextView textViewNota) {
+        StringBuilder contenidoNotas = new StringBuilder();
+
+        File folder = new File(getFilesDir(), "Notas_" + nombreSupermercado);
+        if (!folder.exists()) {
+            textViewNota.setText("No hay notas para este supermercado.");
+            return;
+        }
+
+        File[] files = folder.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                contenidoNotas.append(leerContenidoNota(file)).append("\n");
+            }
+        }
+
+        textViewNota.setText(contenidoNotas.toString());
+    }
+
+    private String leerContenidoNota(File file) {
         StringBuilder contenido = new StringBuilder();
         try {
-            InputStream inputStream = openFileInput(fileName);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(file));
             String line;
             while ((line = bufferedReader.readLine()) != null) {
                 contenido.append(line).append("\n");
@@ -47,3 +62,4 @@ public class VerNotaActivity extends AppCompatActivity {
         return contenido.toString();
     }
 }
+

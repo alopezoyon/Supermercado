@@ -28,6 +28,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
@@ -123,67 +125,27 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
     }
 
     //Método utilizado para guardar las notas en un archivo interno de la aplicación
-    private void guardarNotaEnArchivo(String nota) {
+    private void guardarNotaEnArchivo(String nota, String nombreSupermercado) {
         try {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+            String folderName = "Notas_" + nombreSupermercado;
             String fileName = "nota_" + timeStamp + ".txt";
 
-            OutputStreamWriter fichero = new OutputStreamWriter(openFileOutput(fileName, Context.MODE_PRIVATE));
-            fichero.write(nota);
-            fichero.close();
+            File folder = new File(getFilesDir(), folderName);
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+
+            File file = new File(folder, fileName);
+            FileWriter writer = new FileWriter(file);
+            writer.write(nota);
+            writer.close();
+
             mostrarNotificacion(fileName);
         } catch (IOException e) {
             e.printStackTrace();
             Toast.makeText(this, "Error al guardar la nota en el archivo.", Toast.LENGTH_SHORT).show();
         }
-    }
-
-    //Método que usa para mostrar una notificación en caso de haber guardado una nota
-    private void mostrarNotificacion(String filename) {
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
-                PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new
-                    String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 11);
-        }
-
-        NotificationManager elManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(this, "IdCanal");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel elCanal= new NotificationChannel("IdCanal", "NombreCanal",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            elCanal.setDescription("Descripción del canal");
-            elCanal.enableLights(true);
-            elCanal.setLightColor(Color.RED);
-            elCanal.setVibrationPattern(new long[]{0, 1000, 500, 1000});
-            elCanal.enableVibration(true);
-            elManager.createNotificationChannel(elCanal);
-        }
-
-        elBuilder.setSmallIcon(android.R.drawable.stat_sys_warning)
-                .setContentTitle(getString(R.string.message_alert))
-                .setContentText(getString(R.string.noti_de) + " " + getString(R.string.app_name))
-                .setVibrate(new long[]{0, 1000, 500, 1000})
-                .setAutoCancel(true);
-
-        Intent i = new Intent(this, VerNotaActivity.class);
-        i.putExtra("ARCHIVO_NOTA", filename);
-        PendingIntent pendingIntent;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pendingIntent = PendingIntent.getActivity(this,
-                    0, i, PendingIntent.FLAG_UPDATE_CURRENT| PendingIntent.FLAG_IMMUTABLE); }
-        else { pendingIntent = PendingIntent.getActivity(this,
-                0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        }
-
-        elBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher_foreground))
-                .setSmallIcon(android.R.drawable.stat_sys_warning)
-                .setContentTitle(getString(R.string.message_alert))
-                .setContentText(getString(R.string.noti_de) + " " + getString(R.string.app_name))
-                .setVibrate(new long[]{0, 1000, 500, 1000})
-                .setAutoCancel(true)
-                .setContentIntent(pendingIntent);
-
-        elManager.notify(1, elBuilder.build());
     }
 
     //Método que muestra el diálogo para agregar una nota
@@ -198,12 +160,19 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
             public void onClick(DialogInterface dialog, int which) {
                 String nota = input.getText().toString();
                 if (!nota.isEmpty()) {
-                    guardarNotaEnArchivo(nota);
+                    guardarNotaEnArchivo(nota, nombreSupermercado);
                 }
             }
         });
 
-        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton("Ver Notas", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                abrirRegistroNotas(nombreSupermercado);
+            }
+        });
+
+        builder.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -212,6 +181,13 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
 
         builder.show();
     }
+
+    private void abrirRegistroNotas(String nombreSupermercado) {
+        Intent intent = new Intent(this, VerNotaActivity.class);
+        intent.putExtra("NOMBRE_SUPERMERCADO", nombreSupermercado);
+        startActivity(intent);
+    }
+
 
     //Mismos métodos para cargar las preferencias
 
@@ -274,5 +250,54 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         else {
             Toast.makeText(this, "El producto ya existe en el supermercado", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //Método que usa para mostrar una notificación en caso de haber guardado una nota
+    private void mostrarNotificacion(String filename) {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new
+                    String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 11);
+        }
+
+        NotificationManager elManager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationCompat.Builder elBuilder = new NotificationCompat.Builder(this, "IdCanal");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel elCanal= new NotificationChannel("IdCanal", "NombreCanal",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            elCanal.setDescription("Descripción del canal");
+            elCanal.enableLights(true);
+            elCanal.setLightColor(Color.RED);
+            elCanal.setVibrationPattern(new long[]{0, 1000, 500, 1000});
+            elCanal.enableVibration(true);
+            elManager.createNotificationChannel(elCanal);
+        }
+
+        elBuilder.setSmallIcon(android.R.drawable.stat_sys_warning)
+                .setContentTitle(getString(R.string.message_alert))
+                .setContentText(getString(R.string.noti_de) + " " + getString(R.string.app_name))
+                .setVibrate(new long[]{0, 1000, 500, 1000})
+                .setAutoCancel(true);
+
+        Intent i = new Intent(this, VerNotaActivity.class);
+        i.putExtra("NOMBRE_SUPERMERCADO", nombreSupermercado);
+        PendingIntent pendingIntent;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            pendingIntent = PendingIntent.getActivity(this,
+                    0, i, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            pendingIntent = PendingIntent.getActivity(this,
+                    0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
+
+        elBuilder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.drawable.ic_launcher_foreground))
+                .setSmallIcon(android.R.drawable.stat_sys_warning)
+                .setContentTitle(getString(R.string.message_alert))
+                .setContentText(getString(R.string.noti_de) + " " + getString(R.string.app_name))
+                .setVibrate(new long[]{0, 1000, 500, 1000})
+                .setAutoCancel(true)
+                .setContentIntent(pendingIntent);
+
+        elManager.notify(1, elBuilder.build());
     }
 }
