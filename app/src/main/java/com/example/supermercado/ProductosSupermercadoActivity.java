@@ -124,7 +124,8 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         }
     }
 
-    //Método utilizado para guardar las notas en un archivo interno de la aplicación
+    //Método utilizado para guardar las notas en un archivo interno de la aplicación.
+    //Crea un directorio por cada supermercado
     private void guardarNotaEnArchivo(String nota, String nombreSupermercado) {
         try {
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
@@ -148,7 +149,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         }
     }
 
-    //Método que muestra el diálogo para agregar una nota
+    //Método que muestra el diálogo para agregar una nota o ver las notas del supermercado
     private void mostrarDialogoAgregarNota() {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Agregar Nota");
@@ -182,6 +183,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
         builder.show();
     }
 
+    //Método que sirve para abrir la actividad de ver notas
     private void abrirRegistroNotas(String nombreSupermercado) {
         Intent intent = new Intent(this, VerNotaActivity.class);
         intent.putExtra("NOMBRE_SUPERMERCADO", nombreSupermercado);

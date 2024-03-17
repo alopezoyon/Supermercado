@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+//Clase que sirve para mostrar las notas asociadas a un supemercado utilizando un textview
 public class VerNotaActivity extends AppCompatActivity {
 
     @Override
@@ -28,6 +29,7 @@ public class VerNotaActivity extends AppCompatActivity {
         }
     }
 
+    //Método utilizado para mostrar las notas del supermercado correspondiente
     private void mostrarNotasPorSupermercado(String nombreSupermercado, TextView textViewNota) {
         StringBuilder contenidoNotas = new StringBuilder();
 
@@ -47,6 +49,7 @@ public class VerNotaActivity extends AppCompatActivity {
         textViewNota.setText(contenidoNotas.toString());
     }
 
+    //Método utilizado para mostrar el contenido de cada una de las notas
     private String leerContenidoNota(File file) {
         StringBuilder contenido = new StringBuilder();
         try {
