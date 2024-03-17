@@ -68,7 +68,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
     // Método para abrir un diálogo para modificar el precio del producto
     private void abrirDialogoModificarPrecio(final Producto producto) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Modificar Precio");
+        builder.setTitle(R.string.modify_precio);
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.activity_dialog_modificar_precio, null);
@@ -77,7 +77,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
         String nombreSupermercado = databaseHelper.obtenerNombreSupermercado(producto);
 
         builder.setView(view);
-        builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 double nuevoPrecio = Double.parseDouble(editTextPrecio.getText().toString());
@@ -86,7 +86,7 @@ public class ProductosAdapter extends RecyclerView.Adapter<ProductosAdapter.Prod
                 databaseHelper.modificarPrecioProducto(nombreSupermercado, producto.getNombre(), nuevoPrecio);
             }
         });
-        builder.setNegativeButton("Cancelar", null);
+        builder.setNegativeButton(R.string.cancel, null);
 
         builder.show();
     }

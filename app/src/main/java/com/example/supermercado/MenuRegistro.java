@@ -54,11 +54,11 @@ public class MenuRegistro extends AppCompatActivity {
 
                 if (!name.isEmpty() && !lastName.isEmpty() && !email.isEmpty() && !username.isEmpty() && !password.isEmpty()) {
                     if (databaseHelper.isUsernameExists(username)){
-                        Toast.makeText(MenuRegistro.this, R.string.username_exist, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MenuRegistro.this, getString(R.string.username_exist), Toast.LENGTH_SHORT).show();
                     }
                     else {
                         databaseHelper.addUser(username, password, email, name, lastName);
-                        Toast.makeText(MenuRegistro.this, R.string.registration_success, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MenuRegistro.this, getString(R.string.registration_success), Toast.LENGTH_SHORT).show();
                     }
 
                     Intent intent = new Intent(MenuRegistro.this, MainActivity.class);
@@ -66,7 +66,7 @@ public class MenuRegistro extends AppCompatActivity {
 
                     finish();
                 } else {
-                    Toast.makeText(MenuRegistro.this, R.string.fill_all_fields, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MenuRegistro.this, getString(R.string.fill_all_fields), Toast.LENGTH_SHORT).show();
                 }
 
             }

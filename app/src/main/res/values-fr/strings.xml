@@ -36,4 +36,11 @@
     <string name="add_product">Ajouter un produit</string>
     <string name="go">Aller</string>
     <string name="username_exist">Le nom d\'utilisateur existe déjà</string>
+    <string name="supermarket_exists">Supermarché existe déjà</string>
+    <string name="modify_precio">Modifier prix</string>
+    <string name="save">Sauvegarder</string>
+    <string name="cancel">Annuler</string>
+    <string name="product_exists">Produit existe déjà</string>
+    <string name="no_notes">Il n\'y a pas de notes dans ce supermarché</string>
+    <string name="see_notes">Voir les notes</string>
 </resources>

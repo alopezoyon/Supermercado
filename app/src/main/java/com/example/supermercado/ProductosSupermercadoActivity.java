@@ -99,7 +99,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
             startActivity(mapIntent);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(ProductosSupermercadoActivity.this, R.string.error_maps, Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProductosSupermercadoActivity.this, getString(R.string.error_maps), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -152,11 +152,11 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
     //Método que muestra el diálogo para agregar una nota o ver las notas del supermercado
     private void mostrarDialogoAgregarNota() {
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Agregar Nota");
+        builder.setTitle(getString(R.string.agregar_notas));
         final EditText input = new EditText(this);
         builder.setView(input);
 
-        builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(getString(R.string.save), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String nota = input.getText().toString();
@@ -166,14 +166,14 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
             }
         });
 
-        builder.setNegativeButton("Ver Notas", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.see_notes), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 abrirRegistroNotas(nombreSupermercado);
             }
         });
 
-        builder.setNeutralButton("Cancelar", new DialogInterface.OnClickListener() {
+        builder.setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.cancel();
@@ -250,7 +250,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
             productosAdapter.notifyDataSetChanged();
         }
         else {
-            Toast.makeText(this, "El producto ya existe en el supermercado", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.product_exists), Toast.LENGTH_SHORT).show();
         }
     }
 

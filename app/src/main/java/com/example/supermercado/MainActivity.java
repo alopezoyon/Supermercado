@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 String password = edtPassword.getText().toString();
 
                 if (databaseHelper.isValidCredentials(username, password)) {
-                    Toast.makeText(MainActivity.this, R.string.login_success, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, getString(R.string.login_success), Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(MainActivity.this, MenuPrincipal.class);
                     intent.putExtra("USERNAME_EXTRA", username);
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     if (loginAttempts > 0) {
                         showAttemptsDialog(loginAttempts);
                     } else {
-                        Toast.makeText(MainActivity.this, R.string.intentos_agotados, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, getString(R.string.intentos_agotados), Toast.LENGTH_SHORT).show();
                         blockLoginAttemptsFor30Seconds();
                     }
                 }
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
     //Método que muestra el diálogo con los tres estilos posibles a elegir
     private void showColorDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.select_color);
+        builder.setTitle(getString(R.string.select_color));
 
         String[] colorOptions = getResources().getStringArray(R.array.colorOptions);
 
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
     //Método que muestra el diálogo con los tres idiomas posibles a elegir
     private void showLanguageDialog() {
         androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(this);
-        builder.setTitle(R.string.select_language)
+        builder.setTitle(getString(R.string.select_language))
                 .setItems(R.array.language_options, (dialog, which) -> {
                     switch (which) {
                         case 0:
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
     //Método que muestra un diálogo con el número de intentos restantes en caso de fallo en el logIn
     private void showAttemptsDialog(int attempts) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.dialog_title_failure);
+        builder.setTitle(getString(R.string.dialog_title_failure));
         builder.setMessage(getString(R.string.dialog_message_invalid_credentials) + attempts);
         builder.setPositiveButton("OK", (dialog, which) -> dialog.dismiss());
         builder.show();

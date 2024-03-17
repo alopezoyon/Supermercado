@@ -55,7 +55,6 @@ public class MenuPrincipal extends AppCompatActivity implements
         loadPreferences();
 
         String username = getIntent().getStringExtra("USERNAME_EXTRA");
-        Log.d("MenuPrincipal", "Estoy en modo " + getResources().getConfiguration().orientation);
 
         TextView txtWelcome = findViewById(R.id.txtWelcome);
 
@@ -151,7 +150,7 @@ public class MenuPrincipal extends AppCompatActivity implements
             supermercadosAdapter.notifyDataSetChanged();
         }
         else {
-            Toast.makeText(this, "El supermercado ya existe en la base de datos", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.supermarket_exists), Toast.LENGTH_SHORT).show();
         }
     }
 

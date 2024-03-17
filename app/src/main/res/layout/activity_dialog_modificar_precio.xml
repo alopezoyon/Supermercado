@@ -9,7 +9,6 @@
         android:id="@+id/editTextPrecio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Nuevo Precio"
         android:inputType="numberDecimal"/>
 
 </LinearLayout>

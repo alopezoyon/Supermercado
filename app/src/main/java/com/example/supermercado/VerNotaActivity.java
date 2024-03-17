@@ -35,7 +35,7 @@ public class VerNotaActivity extends AppCompatActivity {
 
         File folder = new File(getFilesDir(), "Notas_" + nombreSupermercado);
         if (!folder.exists()) {
-            textViewNota.setText("No hay notas para este supermercado.");
+            textViewNota.setText(getString(R.string.no_notes));
             return;
         }
 
