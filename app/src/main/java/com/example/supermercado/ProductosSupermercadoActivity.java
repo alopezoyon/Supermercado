@@ -67,7 +67,7 @@ public class ProductosSupermercadoActivity extends AppCompatActivity implements 
 
         RecyclerView recyclerView = findViewById(R.id.recyclerViewProductosSupermercado);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        productosAdapter = new ProductosAdapter(listaProductos);
+        productosAdapter = new ProductosAdapter(listaProductos, this);
         recyclerView.setAdapter(productosAdapter);
 
         Button btnAddProduct = findViewById(R.id.btnAddProduct);

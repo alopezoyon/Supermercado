@@ -214,4 +214,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return existe;
     }
 
+    // Método para modificar el precio de un producto en la base de datos
+    public void modificarPrecioProducto(String nombreSupermercado, String nombreProducto, double nuevoPrecio) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_PRODUCTO_PRECIO, nuevoPrecio);
+
+        String whereClause = COLUMN_SUPERMERCADO_NOMBRE + " = ? AND " + COLUMN_PRODUCTO_NOMBRE + " = ?";
+        String[] whereArgs = {nombreSupermercado, nombreProducto};
+
+        db.update(TABLE_PRODUCTOS_SUPERMERCADO, values, whereClause, whereArgs);
+        db.close();
+    }
+
+    //Método para obtener el nombre de un supemercado dado un producto
+    public String obtenerNombreSupermercado(Producto producto) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String nombreSupermercado = null;
+        String query = "SELECT " + COLUMN_SUPERMERCADO_NOMBRE +
+                " FROM " + TABLE_PRODUCTOS_SUPERMERCADO +
+                " WHERE " + COLUMN_PRODUCTO_NOMBRE + " = ?";
+        Cursor cursor = db.rawQuery(query, new String[]{producto.getNombre()});
+        if (cursor.moveToFirst()) {
+            nombreSupermercado = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SUPERMERCADO_NOMBRE));
+        }
+        cursor.close();
+        db.close();
+        return nombreSupermercado;
+    }
+
 }
